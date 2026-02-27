@@ -17,7 +17,11 @@ export default function Hero() {
                                 heights and passionate about startups.
                             </p>
 
-                            <div className="mt-7 border border-[#dfe6f5] bg-white p-2 w-full md:w-[120%] md:absolute top-110 rounded">
+                            <form
+                                action="/jobs"
+                                method="get"
+                                className="mt-7 border border-[#dfe6f5] bg-white p-2 w-full md:w-[120%] md:absolute top-110 rounded"
+                            >
                                 <div className="grid gap-1 md:grid-cols-[1.6fr_1.1fr_auto]">
                                     <label className="relative block">
                                         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6d7891]">
@@ -25,6 +29,7 @@ export default function Hero() {
                                         </span>
                                         <input
                                             type="text"
+                                            name="search"
                                             placeholder="Job title or keyword"
                                             className="h-11 w-full border-b border-[#eef2fb] pl-9 pr-3 text-sm text-[#1f2a44] outline-none placeholder:text-[#a3aec5] md:border-b-0 md:border-r"
                                         />
@@ -35,6 +40,7 @@ export default function Hero() {
                                         </span>
                                         <input
                                             type="text"
+                                            name="location"
                                             placeholder="Florence, Italy"
                                             className="h-11 w-full border-b border-[#eef2fb] pl-9 pr-8 text-sm text-[#1f2a44] outline-none placeholder:text-[#a3aec5] md:border-b-0"
                                         />
@@ -42,11 +48,11 @@ export default function Hero() {
                                             <ChevronIcon />
                                         </span>
                                     </label>
-                                    <button className="h-11 bg-[#3a3fe0] px-5 text-sm font-semibold text-white">
+                                    <button type="submit" className="h-11 bg-[#3a3fe0] px-5 text-sm font-semibold text-white">
                                         Search my job
                                     </button>
                                 </div>
-                            </div>
+                            </form>
 
                             <p className="mt-3 text-xs text-[#8f99af]">
                                 Popular : UI Designer, UX Researcher, Android, Admin

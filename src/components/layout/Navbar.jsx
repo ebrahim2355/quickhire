@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Navbar() {
     return (
         <header className="bg-[#F8F8FD] ">
-            <div className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-4 pt-4 md:px-8 md:pt-6">
+            <div className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-8 md:pt-6">
                 <div className="flex items-center gap-7 md:gap-10">
-                    <a href="#" className="flex items-center">
+                    <Link href="/" className="flex items-center">
                         <Image
                             src="/logo.png"
                             alt="QuickHire logo"
@@ -15,10 +16,10 @@ export default function Navbar() {
                             className="w-auto"
                         />
                         <span className="font-bold ml-2 text-xl">Quickhire</span>
-                    </a>
+                    </Link>
                     <nav className="hidden items-center gap-5 text-sm text-[#4d5a73] md:flex">
-                        <a href="#" className="hover:text-sky-500">Find Jobs</a>
-                        <a href="#" className="hover:text-sky-500">Browse Companies</a>
+                        <Link href="/jobs" className="hover:text-sky-500">Find Jobs</Link>
+                        <Link href="/admin/jobs" className="hover:text-sky-500">Admin</Link>
                     </nav>
                 </div>
 
