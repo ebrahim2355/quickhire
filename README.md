@@ -9,6 +9,10 @@ This frontend integrates with a backend API that exposes:
 - `DELETE /api/jobs/:id`
 - `POST /api/applications`
 
+## Live Site
+
+https://quickhire-one.vercel.app
+
 ## Features
 - Landing page sections matching the provided design.
 - Job Listings page with:
