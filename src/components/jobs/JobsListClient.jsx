@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function JobsListClient({ initialJobs, initialFilters = {} }) {
   const [search, setSearch] = useState(initialFilters.search || "");
@@ -31,7 +32,7 @@ export default function JobsListClient({ initialJobs, initialFilters = {} }) {
 
   return (
     <section className="mx-auto w-full max-w-7xl px-3 py-10 md:px-8 md:py-14">
-      <div className="relative overflow-hidden rounded-2xl border border-[#dbe3f5] bg-gradient-to-br from-[#f7f9ff] via-[#ffffff] to-[#eef4ff] p-5 md:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-[#dbe3f5] bg-linear-to-br from-[#f7f9ff] via-[#ffffff] to-[#eef4ff] p-5 md:p-8">
         <div className="pointer-events-none absolute -right-14 -top-14 h-44 w-44 rounded-full bg-[#dfe6ff]/70 blur-2xl" />
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
@@ -85,8 +86,9 @@ export default function JobsListClient({ initialJobs, initialFilters = {} }) {
               setSearch("");
               setLocation("");
               setCategory("");
+              toast("Filters cleared");
             }}
-            className="h-11 rounded-md bg-[#3a3fe0] px-4 text-sm font-semibold text-white transition hover:bg-[#2f35d1]"
+            className="h-11 rounded-md bg-[#3a3fe0] px-4 text-sm font-semibold text-white transition hover:bg-[#2f35d1] cursor-pointer"
           >
             Clear Filters
           </button>

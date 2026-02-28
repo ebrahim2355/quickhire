@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { apiFetch } from "@/lib/api";
+import toast from "react-hot-toast";
 
 export default function AdminJobsClient({ initialJobs }) {
   const [jobs, setJobs] = useState(initialJobs);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     company: "",
@@ -13,7 +15,6 @@ export default function AdminJobsClient({ initialJobs }) {
     description: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -22,7 +23,6 @@ export default function AdminJobsClient({ initialJobs }) {
 
   async function handleCreate(event) {
     event.preventDefault();
-    setError("");
     setIsSubmitting(true);
 
     try {
@@ -44,20 +44,28 @@ export default function AdminJobsClient({ initialJobs }) {
         category: "",
         description: "",
       });
+      toast.success("Job created successfully.");
     } catch (createError) {
-      setError(createError.message || "Failed to create job");
+      toast.error(createError.message || "Failed to create job");
     } finally {
       setIsSubmitting(false);
     }
   }
 
-  async function handleDelete(id) {
-    setError("");
+  function handleDeleteRequest(id) {
+    setPendingDeleteId(id);
+  }
+
+  async function handleDeleteConfirm() {
+    if (!pendingDeleteId) return;
     try {
-      await apiFetch(`/api/jobs/${id}`, { method: "DELETE" });
-      setJobs((prev) => prev.filter((job) => job._id !== id));
+      await apiFetch(`/api/jobs/${pendingDeleteId}`, { method: "DELETE" });
+      setJobs((prev) => prev.filter((job) => job._id !== pendingDeleteId));
+      toast.success("Job deleted.");
     } catch (deleteError) {
-      setError(deleteError.message || "Failed to delete job");
+      toast.error(deleteError.message || "Failed to delete job");
+    } finally {
+      setPendingDeleteId(null);
     }
   }
 
@@ -126,23 +134,17 @@ export default function AdminJobsClient({ initialJobs }) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="h-11 rounded-md bg-[#3a3fe0] px-4 text-sm font-semibold text-white transition hover:bg-[#2f35d1] disabled:opacity-60 md:col-span-2"
+            className="h-11 rounded-md bg-[#3a3fe0] px-4 text-sm font-semibold text-white transition hover:bg-[#2f35d1] disabled:opacity-60 md:col-span-2 cursor-pointer"
           >
             {isSubmitting ? "Saving..." : "Add Job"}
           </button>
         </form>
 
-        {error ? (
-          <p className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {error}
-          </p>
-        ) : null}
-
         <div className="mt-6 grid gap-3">
           {jobs.map((job) => (
             <article
               key={job._id}
-              className="flex flex-wrap items-start justify-between gap-4 rounded-xl border border-[#dde3f0] bg-white p-4 shadow-[0_6px_18px_rgba(34,56,112,0.06)]"
+              className="flex flex-col md:flex-row items-start justify-between gap-4 rounded-xl border border-[#dde3f0] bg-white p-4 shadow-[0_6px_18px_rgba(34,56,112,0.06)]"
             >
               <div>
                 <h2 className="text-lg font-extrabold text-[#1f2a44]">{job.title}</h2>
@@ -152,8 +154,8 @@ export default function AdminJobsClient({ initialJobs }) {
               </div>
               <button
                 type="button"
-                onClick={() => handleDelete(job._id)}
-                className="shrink-0 rounded-md bg-[#eb5757] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#d94a4a]"
+                onClick={() => handleDeleteRequest(job._id)}
+                className="shrink-0 rounded-md bg-[#eb5757] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#d94a4a] cursor-pointer"
               >
                 Delete
               </button>
@@ -161,6 +163,36 @@ export default function AdminJobsClient({ initialJobs }) {
           ))}
         </div>
       </div>
+
+      {pendingDeleteId ? (
+        <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/45 px-4">
+          <div className="w-full max-w-xl rounded-2xl border border-[#dbe3f5] bg-white p-6 shadow-[0_24px_60px_rgba(0,0,0,0.35)] md:p-8">
+            <h3 className="text-2xl font-extrabold text-[#1f2a44] md:text-3xl">Confirm Delete</h3>
+            <p className="mt-3 text-sm text-[#6f7b98] md:text-base">
+              Are you sure you want to delete this job listing? This action cannot be undone.
+            </p>
+            <div className="mt-7 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setPendingDeleteId(null);
+                  toast("Delete cancelled");
+                }}
+                className="rounded-md border border-[#d5def3] px-4 py-2 text-sm font-semibold text-[#4d5a73] cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteConfirm}
+                className="rounded-md bg-[#eb5757] px-4 py-2 text-sm font-semibold text-white hover:bg-[#d94a4a] cursor-pointer"
+              >
+                Delete Job
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

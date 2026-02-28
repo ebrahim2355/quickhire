@@ -1,6 +1,18 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Footer() {
+    const [email, setEmail] = useState("");
+
+    function handleSubscribe(event) {
+        event.preventDefault();
+        toast.success("Subscribed successfully.");
+        setEmail("");
+    }
+
     return (
         <footer className="bg-[#1b2133]">
             <div className="mx-auto w-full max-w-7xl px-4 md:px-8 pt-8 pb-5 text-[#e6eaf6]">
@@ -51,13 +63,16 @@ export default function Footer() {
                         <p className="mt-3 max-w-sm text-xs leading-5 text-[#b1b8cc]">
                             The latest job news, articles, sent to your inbox weekly.
                         </p>
-                        <form className="mt-4 flex max-w-sm">
+                        <form onSubmit={handleSubscribe} className="mt-4 flex max-w-sm">
                             <input
                                 type="email"
                                 placeholder="Email Address"
+                                value={email}
+                                onChange={(event) => setEmail(event.target.value)}
+                                required
                                 className="h-10 w-full border border-[#2c344b] bg-white px-3 text-xs text-[#1f2a44] outline-none rounded-l"
                             />
-                            <button className="h-10 bg-[#4348e8] px-4 text-xs font-semibold text-white rounded-r">
+                            <button type="submit" className="h-10 bg-[#4348e8] px-4 text-xs font-semibold text-white rounded-r">
                                 Subscribe
                             </button>
                         </form>

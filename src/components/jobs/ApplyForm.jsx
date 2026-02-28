@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { apiFetch } from "@/lib/api";
+import toast from "react-hot-toast";
 
 export default function ApplyForm({ jobId }) {
   const [formData, setFormData] = useState({
@@ -11,8 +12,6 @@ export default function ApplyForm({ jobId }) {
     coverNote: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -22,15 +21,13 @@ export default function ApplyForm({ jobId }) {
   async function handleSubmit(event) {
     event.preventDefault();
     setIsSubmitting(true);
-    setError("");
-    setMessage("");
 
     try {
       await apiFetch("/api/applications", {
         method: "POST",
         body: JSON.stringify({ ...formData, jobId }),
       });
-      setMessage("Application submitted successfully.");
+      toast.success("Application submitted successfully.");
       setFormData({
         name: "",
         email: "",
@@ -38,7 +35,7 @@ export default function ApplyForm({ jobId }) {
         coverNote: "",
       });
     } catch (submitError) {
-      setError(submitError.message || "Failed to submit application.");
+      toast.error(submitError.message || "Failed to submit application.");
     } finally {
       setIsSubmitting(false);
     }
@@ -96,21 +93,10 @@ export default function ApplyForm({ jobId }) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="h-11 rounded-md bg-[#3a3fe0] px-4 text-sm font-semibold text-white transition hover:bg-[#2f35d1] disabled:opacity-60"
+        className="h-11 rounded-md bg-[#3a3fe0] px-4 text-sm font-semibold text-white transition hover:bg-[#2f35d1] disabled:opacity-60 cursor-pointer"
       >
         {isSubmitting ? "Submitting..." : "Submit Application"}
       </button>
-
-      {message ? (
-        <p className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
-          {message}
-        </p>
-      ) : null}
-      {error ? (
-        <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
-        </p>
-      ) : null}
     </form>
   );
 }
